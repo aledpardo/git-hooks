@@ -1,0 +1,12 @@
+{
+  "name": "git-hooks",
+  "version": "1.0.0",
+  "description": "GIT Hooks",
+  "scripts": {
+    "setup": "install.sh",
+    "test": "",
+    "lint": ""
+  },
+  "author": "Alexandre Pardo",
+  "license": ""
+}
