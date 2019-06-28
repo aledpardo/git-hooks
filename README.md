@@ -2,24 +2,17 @@
 
 ## Steps to configure
 
-### Clone the Git Hooks repository
+### Setup Git Hooks
 
-1. Open bash (git bash on Windows)
-2. Execute below command
+Run:
 
 ```bash
-cd ~
-git clone repo/path/to/git-hooks .githooks
-cd ./.githooks
-```
-
-Notice the `.` on the folder name! it's very important! :)
-
-You're set up!
+npm run setup
+``` 
 
 ### Overriding
 
-To override the hooks in this repository, run the following command in the folder of the desired repository:
+To override the hooks from this repository, run the following command in the root folder of the desired repository:
 
 ```bash
 git config core.hooksPath '.git/hooks'
