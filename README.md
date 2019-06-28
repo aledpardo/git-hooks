@@ -1,4 +1,4 @@
-# JET Git Hooks
+# Git Hooks
 
 ## Steps to configure
 
