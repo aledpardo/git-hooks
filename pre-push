@@ -14,24 +14,25 @@ print '  GIT PRE-PUSH HOOK FOR LINT/TEST'
 print '==================================='
 
 try:
-	packageJsonFileName = 'package.json'	
-	isNpmProject = os.path.isfile(packageJsonFileName)
 
-	if not isNpmProject:
+	package_json_file_name = 'package.json'
+	is_npm_project = os.path.isfile(package_json_file_name)
+
+	if not is_npm_project: # Nothing to do
 		# Nothing to do
 		sys.exit(0)
 
-	packageJsonContent = open(packageJsonFileName).read()
-	packageJson = json.loads(packageJsonContent)
+	package_json_content = open(package_json_file_name).read()
+	package_json = json.loads(package_json_content)
 
-	scripts = packageJson['scripts']
+	scripts = package_json['scripts']
 
-	hasLint = 'lint' in scripts
-	if hasLint:
+	has_lint = 'lint' in scripts
+	if has_lint:
 		check_call('npm run lint', shell=True)
 
-	hasTest = 'test' in scripts
-	if hasTest:
+	has_test = 'test' in scripts
+	if has_test:
 		check_call('npm run test', shell=True)
 except Exception as e:
 	# Oops, either lint or test failed.
