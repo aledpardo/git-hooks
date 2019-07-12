@@ -3,7 +3,7 @@
 #
 # Python script that implements a Git Hook of type Prepare Commit Message
 # Author: Alexandre Pardo
-# Date 06/26/2019
+# Date: 06/26/2019
 #
 
 from subprocess import check_output, Popen
@@ -14,9 +14,7 @@ import os, re, subprocess, sys
 packageJsonFileName = 'package.json'	
 isNpmProject = os.path.isfile(packageJsonFileName)
 
-if not isNpmProject:
-    # Nothing to do
-    print 'not npm'
+if not isNpmProject: # Nothing to do
     sys.exit(0)
 
 # If this is a NPM project, we can move on
@@ -26,10 +24,10 @@ try:
                           # git symbolic-ref --short HEAD
     branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
 except:
-    # if HEAD is not a symbolic ref, then we might be in a dettached state (not sure)
-    # but, an error is thrown if we run this this during the rebase process, so we simply skip it.
-    # Btw, if we couldn't safely read the branch name, this hook can't continue
-    print 'If you are running rebase or merge, ignore the message: fatal: ref HEAD is not a symbolic ref'
+    # if HEAD is not a symbolic ref, then we might be in a dettached state (not sure).
+    # As an error is thrown if we run this this during the rebase process, so we simply skip it.
+    # Also, if we couldn't safely read the branch name, this hook can't continue
+    print 'If you are running rebase or merge, you may ignore the message: fatal: ref HEAD is not a symbolic ref'
     print 'Otherwise, you better check what is going on'
 
     sys.exit(0)
@@ -46,7 +44,6 @@ not_allowed_branches = ['master', 'dev', 'develop', 'staging', 'release']
 
 # First we check if we're not taking shortcuts ;)
 if branch in not_allowed_branches:
-    print 'here'
     print '======================WARNING====================='
     print '  Direct commit to', branch, 'branch is not allowed'
     print '=================================================='
