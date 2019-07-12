@@ -7,7 +7,7 @@
 #
 
 from subprocess import check_output
-import sys, re
+import re, sys
 
 commit_msg_filepath = sys.argv[1]
 not_allowed_branches = ['master', 'dev', 'develop', 'staging', 'release']
