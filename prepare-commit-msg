@@ -6,27 +6,33 @@
 # Date 06/26/2019
 #
 
-import sys, re
-from subprocess import check_output
+from subprocess import check_output, Popen
+import os, re, subprocess, sys
 
-# We won't run this if we are either running a merge or rebase
+# First, we check if this is a NPM project
 
-# git status | grep "rebasing" | wc -l
+packageJsonFileName = 'package.json'	
+isNpmProject = os.path.isfile(packageJsonFileName)
 
-# ls `git rev-parse --git-dir` | grep rebase
+if not isNpmProject:
+    # Nothing to do
+    print 'not npm'
+    sys.exit(0)
+
+# If this is a NPM project, we can move on
+
+branch = 'master' # default
 try:
-    isRebase = check_output(['git', 'rev-parse', '--git-dir', '|', 'grep', 'rebase']).strip()
-
-    # Test this
-    # parse package.json to object
+                          # git symbolic-ref --short HEAD
+    branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
 except:
+    # if HEAD is not a symbolic ref, then we might be in a dettached state (not sure)
+    # but, an error is thrown if we run this this during the rebase process, so we simply skip it.
+    # Btw, if we couldn't safely read the branch name, this hook can't continue
+    print 'If you are running rebase or merge, ignore the message: fatal: ref HEAD is not a symbolic ref'
+    print 'Otherwise, you better check what is going on'
 
-
-print sys.argv, sys.stdin.read().split()
-commit_msg_filepath = sys.argv[1]
-not_allowed_branches = ['master', 'dev', 'develop', 'staging', 'release']
-
-branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
+    sys.exit(0)
 
 # matches for branch names like:
 # feature/issue-123
@@ -34,27 +40,32 @@ branch = check_output(['git', 'symbolic-ref', '--short', 'HEAD']).strip()
 # hotfix/issue-123
 # hotfix/issue123
 regex = '(feature|hotfix)\/(\w+-\d+|\w+\d+)'
-isMatch = re.match(regex, branch)
+branch_match = re.match(regex, branch)
 
-# First we check if we're not taking shortcuts :D
-# if branch in not_allowed_branches:
-#     print '=====================WARNING====================='
-#     print 'Direct commit to', branch, 'branch is not allowed'
-#     print '================================================='
-#     sys.exit(1)
+not_allowed_branches = ['master', 'dev', 'develop', 'staging', 'release']
+
+# First we check if we're not taking shortcuts ;)
+if branch in not_allowed_branches:
+    print 'here'
+    print '======================WARNING====================='
+    print '  Direct commit to', branch, 'branch is not allowed'
+    print '=================================================='
+    sys.exit(1)
 
 # If we're using the right branch name pattern,
 # append the issue # in the beginning of the commit message
-if isMatch <> None:
-    issue = re.match(regex, branch).group(2)
+if branch_match <> None:
+    issue = branch_match.group(2)
 
+    commit_msg_filepath = sys.argv[1]
     with open(commit_msg_filepath, 'r+') as fh:
         commit_msg = fh.read()
 
-        formattedIssue = '\[' + issue + '\]'
-        hasTicket = re.findall(formattedIssue, commit_msg)
-        print 'hasTicket', hasTicket
-        if hasTicket == None:
+        formatted_issue = '[' + issue + ']'
+        
+        starts_with_ticket = commit_msg.strip().startswith(formatted_issue)
+
+        if not starts_with_ticket:
             fh.seek(0, 0)
             fh.write('[%s] %s' % (issue, commit_msg))
 else:
