@@ -1,11 +1,9 @@
 {
   "name": "git-hooks",
   "version": "1.0.0",
-  "description": "GIT Hooks",
+  "description": "GIT Hooks for a healthy branch strategy and cool quality",
   "scripts": {
-    "setup": "install.sh",
-    "test": "",
-    "lint": ""
+    "test": "echo dummy test"
   },
   "author": "Alexandre Pardo",
   "license": ""
