@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+
+#
+# Python script that implements a Git Hook of type Pre Push
+# Author: Alexandre Pardo
+# Date: 06/26/2019
+#
+
 import json, os, re, sys
 from subprocess import check_call
 

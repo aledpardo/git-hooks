@@ -1,0 +1,11 @@
+{
+    "name": "git-hooks",
+    "version": "1.0.0",
+    "description": "GIT Hooks for a healthy branch strategy and cool quality",
+    "scripts": {
+      "test": "echo dummy test"
+    },
+    "author": "Alexandre Pardo",
+    "license": ""
+  }
+  
