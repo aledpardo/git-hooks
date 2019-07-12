@@ -6,8 +6,8 @@
 # Date 06/26/2019
 #
 
-import sys, re
 from subprocess import check_output
+import sys, re
 
 commit_msg_filepath = sys.argv[1]
 not_allowed_branches = ['master', 'dev', 'develop', 'staging', 'release']
