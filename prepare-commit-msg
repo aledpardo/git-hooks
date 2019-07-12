@@ -6,8 +6,8 @@
 # Date 06/26/2019
 #
 
-from subprocess import check_output
 import sys, re
+from subprocess import check_output
 
 # We won't run this if we are either running a merge or rebase
 
