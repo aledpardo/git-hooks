@@ -11,10 +11,10 @@ import os, re, subprocess, sys
 
 # First, we check if this is a NPM project
 
-packageJsonFileName = 'package.json'
-isNpmProject = os.path.isfile(packageJsonFileName)
+package_json_file_name = 'package.json'
+is_npm_project = os.path.isfile(package_json_file_name)
 
-if not isNpmProject: # Nothing to do
+if not is_npm_project: # Nothing to do
     sys.exit(0)
 
 # If this is a NPM project, we can move on
@@ -41,6 +41,16 @@ regex = '(feature|hotfix)\/(\w+-\d+|\w+\d+)'
 branch_match = re.match(regex, branch)
 
 not_allowed_branches = ['master', 'dev', 'develop', 'staging', 'release']
+
+merge_head_file_path = '.git/MERGE_HEAD'
+is_merging = os.path.isfile(merge_head_file_path)
+
+# First we check if we're not taking shortcuts ;)
+if branch in not_allowed_branches and not is_merging:
+    print '======================WARNING====================='
+    print '  Direct commit to', branch, 'branch is not allowed'
+    print '=================================================='
+    sys.exit(1)
 
 # If we're using the right branch name pattern,
 # append the issue # in the beginning of the commit message
