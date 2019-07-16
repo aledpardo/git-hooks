@@ -9,9 +9,15 @@
 import json, os, re, sys
 from subprocess import check_call
 
-print '==================================='
-print '  GIT PRE-PUSH HOOK FOR LINT/TEST'
-print '==================================='
+def npm_check_run(task_name, scripts):
+    has_task = task_name in scripts
+    if has_task:
+        command = 'npm run ' + task_name
+	check_call(command, shell=True)
+
+print '=================================================='
+print '  GIT PRE-PUSH HOOK IS GONNA RUN LINT/TEST/BUILD'
+print '=================================================='
 
 try:
 
@@ -19,7 +25,6 @@ try:
 	is_npm_project = os.path.isfile(package_json_file_name)
 
 	if not is_npm_project: # Nothing to do
-		# Nothing to do
 		sys.exit(0)
 
 	package_json_content = open(package_json_file_name).read()
@@ -27,14 +32,11 @@ try:
 
 	scripts = package_json['scripts']
 
-	has_lint = 'lint' in scripts
-	if has_lint:
-		check_call('npm run lint', shell=True)
+        npm_check_run('lint', scripts)
+        npm_check_run('test', scripts)
+        npm_check_run('build', scripts)
 
-	has_test = 'test' in scripts
-	if has_test:
-		check_call('npm run test', shell=True)
 except Exception as e:
-	# Oops, either lint or test failed.
+	# Oops, either lint, test or build failed.
 	print 'EXCEPTION THROWN ON PRE-PUSH HOOK', e
 	sys.exit(1)
